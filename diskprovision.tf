@@ -12,7 +12,7 @@ resource "null_resource" "provisioning_disk_redis_master" {
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # register and connect the iSCSI block volume
@@ -36,7 +36,7 @@ resource "null_resource" "partition_disk_redis_master" {
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -56,7 +56,7 @@ resource "null_resource" "pvcreate_exec_redis_master" {
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -76,7 +76,7 @@ resource "null_resource" "vgcreate_exec_redis_master" {
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -99,7 +99,7 @@ resource "null_resource" "format_disk_exec_redis_master" {
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -125,7 +125,7 @@ resource "null_resource" "mount_disk_exec_redis_master" {
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -155,7 +155,7 @@ resource "null_resource" "provisioning_disk_redis_replica" {
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # register and connect the iSCSI block volume
@@ -180,7 +180,7 @@ resource "null_resource" "partition_disk_redis_replica" {
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -201,7 +201,7 @@ resource "null_resource" "pvcreate_exec_redis_replica" {
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -222,7 +222,7 @@ resource "null_resource" "vgcreate_exec_redis_replica" {
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -246,7 +246,7 @@ resource "null_resource" "format_disk_exec_redis_replica" {
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
@@ -273,7 +273,7 @@ resource "null_resource" "mount_disk_exec_redis_replica" {
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk

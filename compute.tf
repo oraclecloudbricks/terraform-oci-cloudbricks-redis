@@ -46,11 +46,11 @@ resource "oci_core_instance" "redis_master" {
     type        = "ssh"
     host        = self.private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   metadata = {
-    ssh_authorized_keys = file(var.ssh_public_key)
+    ssh_authorized_keys = var.is_orm ? var.ssh_public_key : file(var.ssh_public_key)
   }
 }
 
@@ -94,11 +94,11 @@ resource "oci_core_instance" "redis_replica" {
     type        = "ssh"
     host        = self.private_ip
     user        = "opc"
-    private_key = file(var.ssh_private_key)
+    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
   }
 
   metadata = {
-    ssh_authorized_keys = file(var.ssh_public_key)
+    ssh_authorized_keys = var.is_orm ? var.ssh_public_key : file(var.ssh_public_key)
   }
 }
 

@@ -115,7 +115,7 @@ locals {
 
   master_backup_policy_id = var.is_orm ? var.master_backup_policy_level : (length(data.oci_core_volume_backup_policies.MASTERBACKUPPOLICY.volume_backup_policies) > 0 ? data.oci_core_volume_backup_policies.MASTERBACKUPPOLICY.volume_backup_policies[0].id : "")
 
-  replica_backup_policy_id = var.is_orm ? var.replica_backup_policy_level : (length(data.oci_core_volume_backup_policies.REPLICABACKUPPOLICY.volume_backup_policies) > 0 ? data.oci_core_volume_backup_policies.REPLICABACKUPPOLICY.volume_backup_policies[0].id : "") 
+  replica_backup_policy_id = var.is_orm ? var.replica_backup_policy_level : (length(data.oci_core_volume_backup_policies.REPLICABACKUPPOLICY.volume_backup_policies) > 0 ? data.oci_core_volume_backup_policies.REPLICABACKUPPOLICY.volume_backup_policies[0].id : "")
 
   # NSG OCID Local Accessor
   nsg_id = var.is_orm ? var.compute_nsg_name : (length(data.oci_core_network_security_groups.NSG.network_security_groups) > 0 ? data.oci_core_network_security_groups.NSG.network_security_groups[0].id : "")

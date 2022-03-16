@@ -9,6 +9,7 @@
 
 resource "oci_core_instance" "redis_master" {
   availability_domain = var.redis_master_ad
+  fault_domain = var.redis_master_fd
   compartment_id      = local.compartment_id
   display_name        = var.redis_master_name
   shape               = var.redis_master_shape
@@ -27,8 +28,6 @@ resource "oci_core_instance" "redis_master" {
       name          = "Bastion"
     }
   }
-
-  fault_domain = var.redis_master_fd
 
   create_vnic_details {
     subnet_id        = local.private_subnet_ocid
@@ -57,7 +56,8 @@ resource "oci_core_instance" "redis_master" {
 
 resource "oci_core_instance" "redis_replica" {
   count               = var.redis_replica_count
-  availability_domain = var.redis_replica_ad_list[count.index % length(var.redis_replica_ad_list)]
+  availability_domain = local.ad_names_list[count.index % var.redis_replica_ad_count]
+  fault_domain        = local.fd_names_list[floor(count.index / var.redis_replica_ad_count) % var.redis_replica_fd_count]
   compartment_id      = local.compartment_id
   display_name        = "${var.redis_replica_name}${count.index + 1}"
   shape               = var.redis_replica_shape
@@ -76,8 +76,6 @@ resource "oci_core_instance" "redis_replica" {
       name          = "Bastion"
     }
   }
-
-  fault_domain = var.redis_replica_fd_list[floor(count.index / length(var.redis_replica_fd_list)) % length(var.redis_replica_fd_list)]
 
   create_vnic_details {
     subnet_id        = local.private_subnet_ocid

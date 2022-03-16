@@ -23,6 +23,10 @@ data "oci_identity_compartments" "NWCOMPARTMENTS" {
   }
 }
 
+data "oci_identity_availability_domains" "AVAILABILITYDOMAINS" {
+  compartment_id = var.tenancy_ocid
+}
+
 /********** Virual Cloud Network Accessor **********/
 data "oci_core_vcns" "VCN" {
   compartment_id = local.nw_compartment_id
@@ -116,12 +120,17 @@ locals {
   # NSG OCID Local Accessor
   nsg_id = length(data.oci_core_network_security_groups.NSG.network_security_groups) > 0 ? lookup(data.oci_core_network_security_groups.NSG.network_security_groups[0], "id") : ""
 
+  # Compute Image Accessor
   base_compute_image_ocid = data.oci_core_images.ORACLELINUX.images[0].id
 
+  # Flex Shape Accessors
   flex_shapes = distinct(data.oci_core_shapes.FLEXSHAPES.shapes.*.name)
-
   redis_master_is_flex_shape  = contains(local.flex_shapes, var.redis_master_shape)
   redis_replica_is_flex_shape = contains(local.flex_shapes, var.redis_replica_shape)
+
+  # Domains Accessors
+  ad_names_list = data.oci_identity_availability_domains.AVAILABILITYDOMAINS.availability_domains.*.name
+  fd_names_list = ["FAULT-DOMAIN-1", "FAULT-DOMAIN-2", "FAULT-DOMAIN-3"]
 
   # Command aliases for format and mounting iscsi disks
   iscsiadm = "sudo iscsiadm"

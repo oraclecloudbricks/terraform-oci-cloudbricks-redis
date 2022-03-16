@@ -34,7 +34,7 @@ resource "oci_core_volume_backup_policy_assignment" "backup_policy_assignment_IS
 # Create Disk
 resource "oci_core_volume" "ISCSIDisk_redis_replica" {
   count               = var.redis_replica_count
-  availability_domain = var.redis_replica_ad_list[count.index % length(var.redis_replica_ad_list)]
+  availability_domain = local.ad_names_list[count.index % length(var.redis_replica_ad_count)]
   compartment_id      = local.compartment_id
   display_name        = "${oci_core_instance.redis_replica[count.index].display_name}_disk"
   size_in_gbs         = var.replica_disk_size_in_gb

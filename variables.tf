@@ -68,12 +68,14 @@ variable "redis_replica_shape" {
   description = "The shape for the replica instances to use"
 }
 
-variable "redis_replica_ad_list" {
-  description = "The availability domains to provision the replica instances in"
+variable "redis_replica_ad_count" {
+  description = "The number of availability domains to provision the replica instances in"
+  default = 3
 }
 
-variable "redis_replica_fd_list" {
-  description = "The fault domains to provision the replica instances in"
+variable "redis_replica_fd_count" {
+  description = "The number of fault domains to provision the replica instances in"
+  default = 3
 }
 
 variable "redis_replica_ocpus" {

@@ -45,12 +45,6 @@ variable "redis_master_fd" {
   description = "The fault domain to provision the master instance in"
 }
 
-variable "redis_master_is_flex_shape" {
-  description = "Boolean to determine if the master instance is flex or not"
-  type        = bool
-  default     = false
-}
-
 variable "redis_master_ocpus" {
   description = "The number of OCPUS for the master instance to use when flex shape is enabled"
   default     = ""
@@ -80,12 +74,6 @@ variable "redis_replica_ad_list" {
 
 variable "redis_replica_fd_list" {
   description = "The fault domains to provision the replica instances in"
-}
-
-variable "redis_replica_is_flex_shape" {
-  description = "Boolean to determine if the replica instances are flex or not"
-  type        = bool
-  default     = false
 }
 
 variable "redis_replica_ocpus" {

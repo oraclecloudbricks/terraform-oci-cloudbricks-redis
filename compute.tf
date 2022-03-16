@@ -14,7 +14,7 @@ resource "oci_core_instance" "redis_master" {
   shape               = var.redis_master_shape
 
   dynamic "shape_config" {
-    for_each = var.redis_master_is_flex_shape ? [1] : []
+    for_each = local.redis_master_is_flex_shape ? [1] : []
     content {
       ocpus         = var.redis_master_ocpus
       memory_in_gbs = var.redis_master_memory_in_gb
@@ -24,7 +24,7 @@ resource "oci_core_instance" "redis_master" {
   agent_config {
     plugins_config {
       desired_state = "ENABLED"
-      name = "Bastion"
+      name          = "Bastion"
     }
   }
 
@@ -63,7 +63,7 @@ resource "oci_core_instance" "redis_replica" {
   shape               = var.redis_replica_shape
 
   dynamic "shape_config" {
-    for_each = var.redis_replica_is_flex_shape ? [1] : []
+    for_each = local.redis_replica_is_flex_shape ? [1] : []
     content {
       ocpus         = var.redis_replica_ocpus
       memory_in_gbs = var.redis_replica_memory_in_gb
@@ -73,7 +73,7 @@ resource "oci_core_instance" "redis_replica" {
   agent_config {
     plugins_config {
       desired_state = "ENABLED"
-      name = "Bastion"
+      name          = "Bastion"
     }
   }
 

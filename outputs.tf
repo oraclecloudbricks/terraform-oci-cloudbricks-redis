@@ -6,10 +6,10 @@
 
 output "redis_master_server" {
   description = "Redis Master Instance"
-  value = oci_core_instance.redis_master
+  value       = oci_core_instance.redis_master
 }
 
 output "redis_replica_servers" {
   description = "Redis Replica Instances"
-  value = oci_core_instance.redis_replica[*]
+  value       = oci_core_instance.redis_replica[*]
 }

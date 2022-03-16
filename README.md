@@ -85,7 +85,6 @@ redis_master_name          = "MY_REDIS_MASTER_NAME"
 redis_master_shape         = "VM.Standard.E4.Flex"
 redis_master_ad            = "aBCD:RE-REGION-1-AD-1"
 redis_master_fd            = "FAULT-DOMAIN-1"
-redis_master_is_flex_shape = true
 redis_master_ocpus         = "1"
 redis_master_memory_in_gb  = "16"
 
@@ -94,9 +93,8 @@ redis_replica_count         = "3"
 redis_replica_shape         = "VM.Standard.E4.Flex"
 redis_replica_ad_list       = ["oDQF:UK-LONDON-1-AD-1", "oDQF:UK-LONDON-1-AD-2", "oDQF:UK-LONDON-1-AD-3"]
 redis_replica_fd_list       = ["FAULT-DOMAIN-1", "FAULT-DOMAIN-2", "FAULT-DOMAIN-3"]
-redis_replica_is_flex_shape = true
-redis_replica_memory_in_gb  = "1"
-redis_replica_ocpus         = "16"
+redis_replica_ocpus         = "1"
+redis_replica_memory_in_gb  = "16"
 
 redis_version  = "6.2.5"
 
@@ -122,8 +120,8 @@ replica_backup_policy_level = "bronze"
 - Variables `master_disk_size_in_gb` and `replica_disk_size_in_gb` specify the size of the ISCSI disks in GB used to store data and log files on the master and replica servers respectively. This can be between `50` and `32768`.
 - Variable `master_disk_vpus_per_gb` and `replica_disk_vpus_per_gb` specify the VPUs per GB of the ISCSI disks used to store data and log files on the master and replica servers respectively. The value must be between `0` and `120` and be multiple of 10.
 - Flex Shapes:
-  - Variable `redis_master_is_flex_shape` should be defined as true when the master instance is a flex shape. The variables `redis_master_ocpus` and `redis_master_memory_in_gb` should then also be defined. Do not use any of these variables at all when using a standard shape as they are not needed and assume sensible defaults.
-  - Variable `redis_replica_is_flex_shape` should be defined as true when the replica instances are a flex shape. The variables `redis_replica_ocpus` and `redis_replica_memory_in_gb` should then also be defined. Do not use any of these variables at all when using a standard shape as they are not needed and assume sensible defaults.
+  - The variables `redis_master_ocpus` and `redis_master_memory_in_gb` should be set when the master instance is a flex shape.
+  - The variables `redis_replica_ocpus` and `redis_replica_memory_in_gb` should be set when the replica instances are a flex shape.
 
 ### Sample provider
 The following is the base provider definition to be used with this module
@@ -151,8 +149,8 @@ provider "oci" {
   disable_auto_retries = "true"
 }
 ```
-## Variable documentation
 
+## Variable documentation
 ## Requirements
 
 | Name | Version |
@@ -165,7 +163,7 @@ provider "oci" {
 | Name | Version |
 |------|---------|
 | <a name="provider_null"></a> [null](#provider\_null) | 3.1.0 |
-| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.45.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.67.0 |
 | <a name="provider_template"></a> [template](#provider\_template) | 2.2.0 |
 
 ## Modules
@@ -206,6 +204,7 @@ No modules.
 | [oci_core_volume_backup_policy_assignment.backup_policy_assignment_redis_replica](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_volume_backup_policy_assignment) | resource |
 | [oci_core_images.ORACLELINUX](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/data-sources/core_images) | data source |
 | [oci_core_network_security_groups.NSG](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/data-sources/core_network_security_groups) | data source |
+| [oci_core_shapes.FLEXSHAPES](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/data-sources/core_shapes) | data source |
 | [oci_core_subnets.PRIVATESUBNET](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/data-sources/core_subnets) | data source |
 | [oci_core_vcns.VCN](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/data-sources/core_vcns) | data source |
 | [oci_core_volume_backup_policies.INSTANCEBACKUPPOLICY](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/data-sources/core_volume_backup_policies) | data source |
@@ -233,7 +232,6 @@ No modules.
 | <a name="input_private_network_subnet_name"></a> [private\_network\_subnet\_name](#input\_private\_network\_subnet\_name) | Defines the subnet display name where this resource will be created at | `any` | n/a | yes |
 | <a name="input_redis_master_ad"></a> [redis\_master\_ad](#input\_redis\_master\_ad) | The availability domain to provision the master instance in | `any` | n/a | yes |
 | <a name="input_redis_master_fd"></a> [redis\_master\_fd](#input\_redis\_master\_fd) | The fault domain to provision the master instance in | `any` | n/a | yes |
-| <a name="input_redis_master_is_flex_shape"></a> [redis\_master\_is\_flex\_shape](#input\_redis\_master\_is\_flex\_shape) | Boolean to determine if the master instance is flex or not | `bool` | `false` | no |
 | <a name="input_redis_master_memory_in_gb"></a> [redis\_master\_memory\_in\_gb](#input\_redis\_master\_memory\_in\_gb) | The amount of memory in GB for the master instance to use when flex shape is enabled | `string` | `""` | no |
 | <a name="input_redis_master_name"></a> [redis\_master\_name](#input\_redis\_master\_name) | The name given to the master instance | `any` | n/a | yes |
 | <a name="input_redis_master_ocpus"></a> [redis\_master\_ocpus](#input\_redis\_master\_ocpus) | The number of OCPUS for the master instance to use when flex shape is enabled | `string` | `""` | no |
@@ -241,7 +239,6 @@ No modules.
 | <a name="input_redis_replica_ad_list"></a> [redis\_replica\_ad\_list](#input\_redis\_replica\_ad\_list) | The availability domains to provision the replica instances in | `any` | n/a | yes |
 | <a name="input_redis_replica_count"></a> [redis\_replica\_count](#input\_redis\_replica\_count) | The number of replica instances to provision | `number` | n/a | yes |
 | <a name="input_redis_replica_fd_list"></a> [redis\_replica\_fd\_list](#input\_redis\_replica\_fd\_list) | The fault domains to provision the replica instances in | `any` | n/a | yes |
-| <a name="input_redis_replica_is_flex_shape"></a> [redis\_replica\_is\_flex\_shape](#input\_redis\_replica\_is\_flex\_shape) | Boolean to determine if the replica instances are flex or not | `bool` | `false` | no |
 | <a name="input_redis_replica_memory_in_gb"></a> [redis\_replica\_memory\_in\_gb](#input\_redis\_replica\_memory\_in\_gb) | The amount of memory in GB for the replica instances to use when flex shape is enabled | `string` | `""` | no |
 | <a name="input_redis_replica_name"></a> [redis\_replica\_name](#input\_redis\_replica\_name) | The name given to the replica instances | `any` | n/a | yes |
 | <a name="input_redis_replica_ocpus"></a> [redis\_replica\_ocpus](#input\_redis\_replica\_ocpus) | The number of OCPUS for the replica instances to use when flex shape is enabled | `string` | `""` | no |

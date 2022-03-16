@@ -84,6 +84,15 @@ data "oci_core_images" "ORACLELINUX" {
   }
 }
 
+data "oci_core_shapes" "FLEXSHAPES" {
+  compartment_id = local.compartment_id
+
+  filter {
+    name   = "is_flexible"
+    values = [true]
+  }
+}
+
 
 locals {
 
@@ -109,10 +118,15 @@ locals {
 
   base_compute_image_ocid = data.oci_core_images.ORACLELINUX.images[0].id
 
+  flex_shapes = distinct(data.oci_core_shapes.FLEXSHAPES.shapes.*.name)
+
+  redis_master_is_flex_shape  = contains(local.flex_shapes, var.redis_master_shape)
+  redis_replica_is_flex_shape = contains(local.flex_shapes, var.redis_replica_shape)
+
   # Command aliases for format and mounting iscsi disks
   iscsiadm = "sudo iscsiadm"
   fdisk    = "(echo n; echo p; echo '1'; echo ''; echo ''; echo 't';echo '8e'; echo w) | sudo /sbin/fdisk "
-  parted = "sudo parted -a optimal"
+  parted   = "sudo parted -a optimal"
   pvcreate = "sudo /sbin/pvcreate"
   vgcreate = "sudo /sbin/vgcreate"
   mkfs_xfs = "sudo /sbin/mkfs.xfs"

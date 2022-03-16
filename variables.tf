@@ -70,12 +70,12 @@ variable "redis_replica_shape" {
 
 variable "redis_replica_ad_count" {
   description = "The number of availability domains to provision the replica instances in"
-  default = 3
+  default     = 3
 }
 
 variable "redis_replica_fd_count" {
   description = "The number of fault domains to provision the replica instances in"
-  default = 3
+  default     = 3
 }
 
 variable "redis_replica_ocpus" {

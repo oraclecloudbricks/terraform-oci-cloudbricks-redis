@@ -9,7 +9,7 @@
 
 resource "oci_core_instance" "redis_master" {
   availability_domain = var.redis_master_ad
-  fault_domain = var.redis_master_fd
+  fault_domain        = var.redis_master_fd
   compartment_id      = local.compartment_id
   display_name        = var.redis_master_name
   shape               = var.redis_master_shape

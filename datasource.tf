@@ -101,24 +101,24 @@ data "oci_core_shapes" "FLEXSHAPES" {
 locals {
 
   # Subnet OCID local accessors
-  private_subnet_ocid = length(data.oci_core_subnets.PRIVATESUBNET.subnets) > 0 ? data.oci_core_subnets.PRIVATESUBNET.subnets[0].id : null
+  private_subnet_ocid = var.is_orm ? var.private_network_subnet_name : data.oci_core_subnets.PRIVATESUBNET.subnets[0].id
 
   # Compartment OCID Local Accessor
-  compartment_id    = lookup(data.oci_identity_compartments.COMPARTMENTS.compartments[0], "id")
-  nw_compartment_id = lookup(data.oci_identity_compartments.NWCOMPARTMENTS.compartments[0], "id")
+  compartment_id    = var.is_orm ? var.linux_compute_instance_compartment_name : lookup(data.oci_identity_compartments.COMPARTMENTS.compartments[0], "id")
+  nw_compartment_id = var.is_orm ? var.linux_compute_network_compartment_name : lookup(data.oci_identity_compartments.NWCOMPARTMENTS.compartments[0], "id")
 
   # VCN OCID Local Accessor
-  vcn_id = lookup(data.oci_core_vcns.VCN.virtual_networks[0], "id")
+  vcn_id = var.is_orm ? var.vcn_display_name : lookup(data.oci_core_vcns.VCN.virtual_networks[0], "id")
 
   # Backup Policy Accessors
-  instance_backup_policy_id = data.oci_core_volume_backup_policies.INSTANCEBACKUPPOLICY.volume_backup_policies[0].id
+  instance_backup_policy_id = var.is_orm ? var.instance_backup_policy_level : data.oci_core_volume_backup_policies.INSTANCEBACKUPPOLICY.volume_backup_policies[0].id
 
-  master_backup_policy_id = data.oci_core_volume_backup_policies.MASTERBACKUPPOLICY.volume_backup_policies[0].id
+  master_backup_policy_id = var.is_orm ? var.master_backup_policy_level : data.oci_core_volume_backup_policies.MASTERBACKUPPOLICY.volume_backup_policies[0].id
 
-  replica_backup_policy_id = data.oci_core_volume_backup_policies.REPLICABACKUPPOLICY.volume_backup_policies[0].id
+  replica_backup_policy_id = var.is_orm ? var.replica_backup_policy_level : data.oci_core_volume_backup_policies.REPLICABACKUPPOLICY.volume_backup_policies[0].id
 
   # NSG OCID Local Accessor
-  nsg_id = length(data.oci_core_network_security_groups.NSG.network_security_groups) > 0 ? lookup(data.oci_core_network_security_groups.NSG.network_security_groups[0], "id") : ""
+  nsg_id = var.is_orm ? var.compute_nsg_name : (length(data.oci_core_network_security_groups.NSG.network_security_groups) > 0 ? lookup(data.oci_core_network_security_groups.NSG.network_security_groups[0], "id") : "")
 
   # Compute Image Accessor
   base_compute_image_ocid = data.oci_core_images.ORACLELINUX.images[0].id

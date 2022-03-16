@@ -149,4 +149,9 @@ variable "redis_version" {
   description = "The version of Redis used in the setup"
 }
 
+variable "is_orm" {
+  description = "If ORM is being use to provision the infrastructure. This shouldn't ever be set to true manually."
+  default     = false
+}
+
 /********** Brick Variables **********/

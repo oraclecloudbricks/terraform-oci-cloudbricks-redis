@@ -9,6 +9,7 @@ resource "null_resource" "provisioning_disk_redis_master" {
   depends_on = [oci_core_volume_attachment.ISCSIDiskAttachment_redis_master]
 
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
@@ -33,6 +34,7 @@ resource "null_resource" "partition_disk_redis_master" {
   depends_on = [null_resource.provisioning_disk_redis_master]
 
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
@@ -53,6 +55,7 @@ resource "null_resource" "partition_disk_redis_master" {
 resource "null_resource" "pvcreate_exec_redis_master" {
   depends_on = [null_resource.partition_disk_redis_master]
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
@@ -73,6 +76,7 @@ resource "null_resource" "pvcreate_exec_redis_master" {
 resource "null_resource" "vgcreate_exec_redis_master" {
   depends_on = [null_resource.pvcreate_exec_redis_master]
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
@@ -96,6 +100,7 @@ resource "null_resource" "format_disk_exec_redis_master" {
     oci_core_volume_attachment.ISCSIDiskAttachment_redis_master
   ]
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
@@ -122,6 +127,7 @@ resource "null_resource" "mount_disk_exec_redis_master" {
     oci_core_volume_attachment.ISCSIDiskAttachment_redis_master
   ]
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
@@ -152,6 +158,7 @@ resource "null_resource" "provisioning_disk_redis_replica" {
   depends_on = [oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica]
 
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
@@ -177,6 +184,7 @@ resource "null_resource" "partition_disk_redis_replica" {
   depends_on = [null_resource.provisioning_disk_redis_replica]
 
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
@@ -198,6 +206,7 @@ resource "null_resource" "pvcreate_exec_redis_replica" {
   count      = var.redis_replica_count
   depends_on = [null_resource.partition_disk_redis_replica]
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
@@ -219,6 +228,7 @@ resource "null_resource" "vgcreate_exec_redis_replica" {
   count      = var.redis_replica_count
   depends_on = [null_resource.pvcreate_exec_redis_replica]
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
@@ -243,6 +253,7 @@ resource "null_resource" "format_disk_exec_redis_replica" {
     oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica
   ]
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
@@ -270,6 +281,7 @@ resource "null_resource" "mount_disk_exec_redis_replica" {
     oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica
   ]
   connection {
+    timeout     = "60m"
     type        = "ssh"
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"

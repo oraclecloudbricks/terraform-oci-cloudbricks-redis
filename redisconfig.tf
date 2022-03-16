@@ -44,6 +44,7 @@ resource "null_resource" "master_install_redis_binaries" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -57,6 +58,7 @@ resource "null_resource" "master_install_redis_binaries" {
 
   provisioner "file" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -69,6 +71,7 @@ resource "null_resource" "master_install_redis_binaries" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -96,6 +99,7 @@ resource "null_resource" "replica_install_redis_binaries" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
@@ -109,6 +113,7 @@ resource "null_resource" "replica_install_redis_binaries" {
 
   provisioner "file" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
@@ -121,6 +126,7 @@ resource "null_resource" "replica_install_redis_binaries" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
@@ -142,6 +148,7 @@ resource "null_resource" "redis_setup_master" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -155,6 +162,7 @@ resource "null_resource" "redis_setup_master" {
 
   provisioner "file" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -167,6 +175,7 @@ resource "null_resource" "redis_setup_master" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -189,6 +198,7 @@ resource "null_resource" "redis_setup_replicas" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
@@ -202,6 +212,7 @@ resource "null_resource" "redis_setup_replicas" {
 
   provisioner "file" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
@@ -214,6 +225,7 @@ resource "null_resource" "redis_setup_replicas" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
@@ -235,6 +247,7 @@ resource "null_resource" "sentinel_setup_master" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -248,6 +261,7 @@ resource "null_resource" "sentinel_setup_master" {
 
   provisioner "file" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -260,6 +274,7 @@ resource "null_resource" "sentinel_setup_master" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
@@ -282,6 +297,7 @@ resource "null_resource" "sentinel_setup_replicas" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
@@ -295,6 +311,7 @@ resource "null_resource" "sentinel_setup_replicas" {
 
   provisioner "file" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
@@ -307,6 +324,7 @@ resource "null_resource" "sentinel_setup_replicas" {
 
   provisioner "remote-exec" {
     connection {
+      timeout     = "60m"
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip

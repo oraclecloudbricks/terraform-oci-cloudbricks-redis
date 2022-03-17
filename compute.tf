@@ -49,7 +49,7 @@ resource "oci_core_instance" "redis_master" {
   }
 
   connection {
-    type        = "ssh"
+    agent       = false
     host        = self.private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -98,7 +98,7 @@ resource "oci_core_instance" "redis_replica" {
   }
 
   connection {
-    type        = "ssh"
+    agent       = false
     host        = self.private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem

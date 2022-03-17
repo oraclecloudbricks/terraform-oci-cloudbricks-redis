@@ -10,7 +10,7 @@ resource "null_resource" "provisioning_disk_redis_master" {
 
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -35,7 +35,7 @@ resource "null_resource" "partition_disk_redis_master" {
 
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -56,7 +56,7 @@ resource "null_resource" "pvcreate_exec_redis_master" {
   depends_on = [null_resource.partition_disk_redis_master]
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -77,7 +77,7 @@ resource "null_resource" "vgcreate_exec_redis_master" {
   depends_on = [null_resource.pvcreate_exec_redis_master]
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -101,7 +101,7 @@ resource "null_resource" "format_disk_exec_redis_master" {
   ]
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -128,7 +128,7 @@ resource "null_resource" "mount_disk_exec_redis_master" {
   ]
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_master.private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -159,7 +159,7 @@ resource "null_resource" "provisioning_disk_redis_replica" {
 
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -185,7 +185,7 @@ resource "null_resource" "partition_disk_redis_replica" {
 
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -207,7 +207,7 @@ resource "null_resource" "pvcreate_exec_redis_replica" {
   depends_on = [null_resource.partition_disk_redis_replica]
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -229,7 +229,7 @@ resource "null_resource" "vgcreate_exec_redis_replica" {
   depends_on = [null_resource.pvcreate_exec_redis_replica]
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -254,7 +254,7 @@ resource "null_resource" "format_disk_exec_redis_replica" {
   ]
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem
@@ -282,7 +282,7 @@ resource "null_resource" "mount_disk_exec_redis_replica" {
   ]
   connection {
     timeout     = "60m"
-    type        = "ssh"
+    agent       = false
     host        = oci_core_instance.redis_replica[count.index].private_ip
     user        = "opc"
     private_key = tls_private_key.ssh_key_pair.private_key_pem

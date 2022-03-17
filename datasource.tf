@@ -132,6 +132,9 @@ locals {
   ad_names_list = data.oci_identity_availability_domains.AVAILABILITYDOMAINS.availability_domains.*.name
   fd_names_list = ["FAULT-DOMAIN-1", "FAULT-DOMAIN-2", "FAULT-DOMAIN-3"]
 
+  # SSH Authorized Key Accessor - Puts both auto generated key and user provided key into authorized_keys file
+  ssh_authorized_keys = var.is_orm ? trimspace(replace(join("\n", tolist([var.ssh_public_key, tls_private_key.ssh_key_pair.public_key_openssh])), "/\n\n/", "\n")) : trimspace(replace(join("\n", tolist([file(var.ssh_public_key), tls_private_key.ssh_key_pair.public_key_openssh])), "/\n\n/", "\n"))
+
   # Command aliases for format and mounting iscsi disks
   iscsiadm = "sudo iscsiadm"
   fdisk    = "(echo n; echo p; echo '1'; echo ''; echo ''; echo 't';echo '8e'; echo w) | sudo /sbin/fdisk "

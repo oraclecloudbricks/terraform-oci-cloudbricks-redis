@@ -92,10 +92,6 @@ variable "ssh_public_key" {
   description = "Defines SSH Public Key to be used in order to remotely connect to compute instances"
 }
 
-variable "ssh_private_key" {
-  description = "Defines SSH Private Key to be used in order to remotely connect to compute instances"
-}
-
 variable "linux_compute_instance_compartment_name" {
   description = "Defines the compartment name where the infrastructure will be created"
 }

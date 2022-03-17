@@ -48,7 +48,7 @@ resource "null_resource" "master_install_redis_binaries" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -62,7 +62,7 @@ resource "null_resource" "master_install_redis_binaries" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     content     = data.template_file.install_redis_binaries_sh.rendered
@@ -75,7 +75,7 @@ resource "null_resource" "master_install_redis_binaries" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -103,7 +103,7 @@ resource "null_resource" "replica_install_redis_binaries" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -117,7 +117,7 @@ resource "null_resource" "replica_install_redis_binaries" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     content     = data.template_file.install_redis_binaries_sh.rendered
@@ -130,7 +130,7 @@ resource "null_resource" "replica_install_redis_binaries" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -152,7 +152,7 @@ resource "null_resource" "redis_setup_master" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -166,7 +166,7 @@ resource "null_resource" "redis_setup_master" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     content     = data.template_file.redis_setup_master_sh.rendered
@@ -179,7 +179,7 @@ resource "null_resource" "redis_setup_master" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -202,7 +202,7 @@ resource "null_resource" "redis_setup_replicas" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -216,7 +216,7 @@ resource "null_resource" "redis_setup_replicas" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     content     = data.template_file.redis_setup_replicas_sh[count.index].rendered
@@ -229,7 +229,7 @@ resource "null_resource" "redis_setup_replicas" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -251,7 +251,7 @@ resource "null_resource" "sentinel_setup_master" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -265,7 +265,7 @@ resource "null_resource" "sentinel_setup_master" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     source      = "${path.module}/scripts/sentinel_setup.sh"
@@ -278,7 +278,7 @@ resource "null_resource" "sentinel_setup_master" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_master.private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -301,7 +301,7 @@ resource "null_resource" "sentinel_setup_replicas" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [
@@ -315,7 +315,7 @@ resource "null_resource" "sentinel_setup_replicas" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     source      = "${path.module}/scripts/sentinel_setup.sh"
@@ -328,7 +328,7 @@ resource "null_resource" "sentinel_setup_replicas" {
       type        = "ssh"
       user        = "opc"
       host        = oci_core_instance.redis_replica[count.index].private_ip
-      private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
     }
 
     inline = [

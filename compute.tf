@@ -7,7 +7,13 @@
 #           https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_volume_backup_policy_assignment
 
 
+resource "tls_private_key" "ssh_key_pair" {
+  algorithm = "RSA"
+  rsa_bits  = "4096"
+}
+
 resource "oci_core_instance" "redis_master" {
+  depends_on = [tls_private_key.ssh_key_pair]
   availability_domain = var.redis_master_ad
   fault_domain        = var.redis_master_fd
   compartment_id      = local.compartment_id
@@ -46,15 +52,16 @@ resource "oci_core_instance" "redis_master" {
     type        = "ssh"
     host        = self.private_ip
     user        = "opc"
-    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+    private_key = tls_private_key.ssh_key_pair.private_key_pem
   }
 
   metadata = {
-    ssh_authorized_keys = var.is_orm ? var.ssh_public_key : file(var.ssh_public_key)
+    ssh_authorized_keys = local.ssh_authorized_keys
   }
 }
 
 resource "oci_core_instance" "redis_replica" {
+  depends_on = [tls_private_key.ssh_key_pair]
   count               = var.redis_replica_count
   availability_domain = local.ad_names_list[count.index % var.redis_replica_ad_count]
   fault_domain        = local.fd_names_list[floor(count.index / var.redis_replica_ad_count) % var.redis_replica_fd_count]
@@ -94,11 +101,11 @@ resource "oci_core_instance" "redis_replica" {
     type        = "ssh"
     host        = self.private_ip
     user        = "opc"
-    private_key = var.is_orm ? var.ssh_private_key : file(var.ssh_private_key)
+    private_key = tls_private_key.ssh_key_pair.private_key_pem
   }
 
   metadata = {
-    ssh_authorized_keys = var.is_orm ? var.ssh_public_key : file(var.ssh_public_key)
+    ssh_authorized_keys = local.ssh_authorized_keys
   }
 }
 

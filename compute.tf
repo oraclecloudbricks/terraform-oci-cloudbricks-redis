@@ -13,7 +13,7 @@ resource "tls_private_key" "ssh_key_pair" {
 }
 
 resource "oci_core_instance" "redis_master" {
-  depends_on = [tls_private_key.ssh_key_pair]
+  depends_on          = [tls_private_key.ssh_key_pair]
   availability_domain = var.redis_master_ad
   fault_domain        = var.redis_master_fd
   compartment_id      = local.compartment_id
@@ -61,7 +61,7 @@ resource "oci_core_instance" "redis_master" {
 }
 
 resource "oci_core_instance" "redis_replica" {
-  depends_on = [tls_private_key.ssh_key_pair]
+  depends_on          = [tls_private_key.ssh_key_pair]
   count               = var.redis_replica_count
   availability_domain = local.ad_names_list[count.index % var.redis_replica_ad_count]
   fault_domain        = local.fd_names_list[floor(count.index / var.redis_replica_ad_count) % var.redis_replica_fd_count]

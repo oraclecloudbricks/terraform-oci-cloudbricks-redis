@@ -7,18 +7,17 @@
 
 resource "null_resource" "provisioning_disk_redis_master" {
   depends_on = [oci_core_volume_attachment.ISCSIDiskAttachment_redis_master]
-
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_master.private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
   # register and connect the iSCSI block volume
 
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_master.private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
 
     inline = [
       "set +x",
@@ -32,17 +31,18 @@ resource "null_resource" "provisioning_disk_redis_master" {
 
 resource "null_resource" "partition_disk_redis_master" {
   depends_on = [null_resource.provisioning_disk_redis_master]
-
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_master.private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_master.private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set +x",
       "export DEVICE_ID=/dev/disk/by-path/ip-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.ipv4}:${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.port}-iscsi-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.iqn}-lun-1",
@@ -54,16 +54,18 @@ resource "null_resource" "partition_disk_redis_master" {
 
 resource "null_resource" "pvcreate_exec_redis_master" {
   depends_on = [null_resource.partition_disk_redis_master]
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_master.private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_master.private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set +x",
       "export DEVICE_ID=/dev/disk/by-path/ip-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.ipv4}:${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.port}-iscsi-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.iqn}-lun-1",
@@ -75,16 +77,18 @@ resource "null_resource" "pvcreate_exec_redis_master" {
 
 resource "null_resource" "vgcreate_exec_redis_master" {
   depends_on = [null_resource.pvcreate_exec_redis_master]
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_master.private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_master.private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set +x",
       "export DEVICE_ID=/dev/disk/by-path/ip-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.ipv4}:${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.port}-iscsi-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.iqn}-lun-1",
@@ -95,20 +99,20 @@ resource "null_resource" "vgcreate_exec_redis_master" {
 
 
 resource "null_resource" "format_disk_exec_redis_master" {
-  depends_on = [
-    null_resource.vgcreate_exec_redis_master,
-    oci_core_volume_attachment.ISCSIDiskAttachment_redis_master
-  ]
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_master.private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
+  depends_on = [null_resource.vgcreate_exec_redis_master,
+  oci_core_volume_attachment.ISCSIDiskAttachment_redis_master]
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_master.private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set -x",
       "export DEVICE_ID=/dev/disk/by-path/ip-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.ipv4}:${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.port}-iscsi-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_master.iqn}-lun-1",
@@ -124,18 +128,18 @@ resource "null_resource" "format_disk_exec_redis_master" {
 
 resource "null_resource" "mount_disk_exec_redis_master" {
   depends_on = [null_resource.format_disk_exec_redis_master,
-    oci_core_volume_attachment.ISCSIDiskAttachment_redis_master
-  ]
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_master.private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
+  oci_core_volume_attachment.ISCSIDiskAttachment_redis_master]
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_master.private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set +x",
       "export MOUNTED_DISKS=$(cat /etc/fstab |grep u01 |wc -l)",
@@ -156,18 +160,16 @@ resource "null_resource" "mount_disk_exec_redis_master" {
 resource "null_resource" "provisioning_disk_redis_replica" {
   count      = var.redis_replica_count
   depends_on = [oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica]
-
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_replica[count.index].private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
   # register and connect the iSCSI block volume
 
   provisioner "remote-exec" {
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_replica[count.index].private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
 
     inline = [
       "set +x",
@@ -182,17 +184,18 @@ resource "null_resource" "provisioning_disk_redis_replica" {
 resource "null_resource" "partition_disk_redis_replica" {
   count      = var.redis_replica_count
   depends_on = [null_resource.provisioning_disk_redis_replica]
-
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_replica[count.index].private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_replica[count.index].private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set +x",
       "export DEVICE_ID=/dev/disk/by-path/ip-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].ipv4}:${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].port}-iscsi-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].iqn}-lun-1",
@@ -205,16 +208,18 @@ resource "null_resource" "partition_disk_redis_replica" {
 resource "null_resource" "pvcreate_exec_redis_replica" {
   count      = var.redis_replica_count
   depends_on = [null_resource.partition_disk_redis_replica]
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_replica[count.index].private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_replica[count.index].private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set +x",
       "export DEVICE_ID=/dev/disk/by-path/ip-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].ipv4}:${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].port}-iscsi-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].iqn}-lun-1",
@@ -227,16 +232,18 @@ resource "null_resource" "pvcreate_exec_redis_replica" {
 resource "null_resource" "vgcreate_exec_redis_replica" {
   count      = var.redis_replica_count
   depends_on = [null_resource.pvcreate_exec_redis_replica]
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_replica[count.index].private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_replica[count.index].private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set +x",
       "export DEVICE_ID=/dev/disk/by-path/ip-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].ipv4}:${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].port}-iscsi-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].iqn}-lun-1",
@@ -247,21 +254,21 @@ resource "null_resource" "vgcreate_exec_redis_replica" {
 
 
 resource "null_resource" "format_disk_exec_redis_replica" {
-  count = var.redis_replica_count
-  depends_on = [
-    null_resource.vgcreate_exec_redis_replica,
-    oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica
-  ]
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_replica[count.index].private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
+  count      = var.redis_replica_count
+  depends_on = [null_resource.vgcreate_exec_redis_replica, 
+  oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica]
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_replica[count.index].private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set -x",
       "export DEVICE_ID=/dev/disk/by-path/ip-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].ipv4}:${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].port}-iscsi-${oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica[count.index].iqn}-lun-1",
@@ -278,18 +285,19 @@ resource "null_resource" "format_disk_exec_redis_replica" {
 resource "null_resource" "mount_disk_exec_redis_replica" {
   count = var.redis_replica_count
   depends_on = [null_resource.format_disk_exec_redis_replica,
-    oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica
-  ]
-  connection {
-    timeout     = "60m"
-    agent       = false
-    host        = oci_core_instance.redis_replica[count.index].private_ip
-    user        = "opc"
-    private_key = tls_private_key.ssh_key_pair.private_key_pem
-  }
-
+  oci_core_volume_attachment.ISCSIDiskAttachment_redis_replica]
   # With provisioned disk, trigger fdisk, then pvcreate and vgcreate to tag the disk
+  
   provisioner "remote-exec" {
+
+    connection {
+      timeout     = "60m"
+      agent       = false
+      host        = oci_core_instance.redis_replica[count.index].private_ip
+      user        = "opc"
+      private_key = tls_private_key.ssh_key_pair.private_key_pem
+    }
+
     inline = [
       "set +x",
       "export MOUNTED_DISKS=$(cat /etc/fstab |grep u01 |wc -l)",
